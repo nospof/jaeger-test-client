@@ -35,12 +35,10 @@ func main() {
 	}
 	defer closer.Close()
 
-	println("Generating spans...")
 	for {
 		<-ticker.C
 		sp := opentracing.StartSpan("dummy-span")
 		ext.SamplingPriority.Set(sp, 1)
 		sp.Finish()
-		println("Generated span.")
 	}
 }
