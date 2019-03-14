@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"time"
 
@@ -13,11 +14,11 @@ import (
 )
 
 func main() {
-	rate := flag.Int("rate", 1, "Rate at which traces should be generated.")
-	// hostname := flag.String("host", "localhost", "Jaeger proxy hostname")
-	// port := flag.Int("port", 6831, "Jaeger proxy udp port")
+	interval := flag.Int("interval", 1000, "Interval (ms) at which traces should be generated.")
+	flag.Parse()
+	fmt.Printf("Generating traces every %d ms\n", *interval)
 
-	ticker := time.NewTicker(time.Second * time.Duration(*rate))
+	ticker := time.NewTicker(time.Millisecond * time.Duration(*interval))
 
 	cfg := jaegercfg.Configuration{
 		Sampler: &jaegercfg.SamplerConfig{
@@ -40,5 +41,6 @@ func main() {
 		sp := opentracing.StartSpan("dummy-span")
 		ext.SamplingPriority.Set(sp, 1)
 		sp.Finish()
+		println("Generated span.")
 	}
 }
